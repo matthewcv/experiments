@@ -1,0 +1,28 @@
+{
+  "name": "experiments",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev-tsc": "tsc --watch",
+    "dev-serve": "live-server --watch=\"build/**/*,index.html\" --no-browser",
+    "start": "concurrently npm:dev-*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matthewcv/experiments.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matthewcv/experiments/issues"
+  },
+  "homepage": "https://github.com/matthewcv/experiments#readme",
+  "devDependencies": {
+    "concurrently": "^5.1.0"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.13"
+  }
+}

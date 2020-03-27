@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "target": "ESNext",
+        "sourceMap": false,
+        "outDir": "build",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "types":[]   
+    },
+    
+    "include": [
+        "src/**/*"
+    ]
+
+
+}
