@@ -1,4 +1,6 @@
-/// <reference path="../node_modules/reflect-metadata/standalone.d.ts" />
+
+
+import '../node_modules/reflect-metadata/Reflect.js'
 
 
 function ClassDecorator(target, name?, descriptor?) {
@@ -18,7 +20,7 @@ function FieldDecorator(target, name, descriptor?: TypedPropertyDescriptor<any>)
 function FancyDecorator(param:string) {
 
   return (target, name, descriptor?) => {
-
+    
     console.info("FancyDecorator", param, target, name, descriptor)
   }
 }
@@ -67,5 +69,11 @@ export class DecoratedClass extends SomeBaseClass {
 }
 
 //var c = new DecoratedClass('hi');
+
+//can't put decorators on plain functions. TS compiler strips it from the output
+@MethodDecorator
+export function SomeOldFunction(param: string):string {
+  return `${param}~~${param}`
+}
 
 
