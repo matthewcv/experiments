@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+
+        .chart-bar {
+            display: flex;
+        }
+
+        .chart-bar .label {
+            width: 4rem;
+        }
+
+        .chart-bar .bar {
+            
+        }
+    </style>
+</head>
+<body >
+
+    <div>
+        <input id="how-many" type="number" value="100000" /> <button id='make-them'>make them</button> Total: <span id='total-gend'></span>
+    </div>
+    <div id="chart"></div>
+
+    <script type="module">
+
+        const worker = new Worker("worker.js", {type:"module"})
+        
+        worker.addEventListener('error', evt => {
+            console.log("WORKER ERROR", evt)
+        })
+        worker.addEventListener('message', evt => {
+            //console.log("message from worker", evt)
+            if(evt.data.idCharDistributions && evt.data.totalGenerated) {
+                updateDisplay(evt.data)
+            }
+        })
+        worker.addEventListener('messageerror', evt => {
+            console.log("WORKER MESSAGE ERROR", evt)
+        })
+
+
+
+        var colors = {};
+        
+
+        document.getElementById('make-them').addEventListener('click', evt => {
+            var howMany = document.getElementById("how-many").valueAsNumber
+            if(!isNaN(howMany)) {
+                worker.postMessage({numIds:howMany})
+            }
+
+        })
+
+        function getColor(char) {
+            if(!colors[char]){
+                var bytes = new Uint8Array(3);
+                crypto.getRandomValues(bytes);
+                colors[char] = `rgb(${bytes[0]},${bytes[1]},${bytes[2]})`
+            }
+
+            return colors[char];
+        }
+
+        function updateDisplay(idCharDetails) {
+
+            requestAnimationFrame(() => {
+                document.getElementById('total-gend').innerText = idCharDetails.totalGenerated;
+
+                makeChart(idCharDetails.idCharDistributions)
+
+            })
+        }
+
+        function makeChart(idCharDistributions){
+
+            document.getElementById('chart').innerHTML = "";
+
+            var keys = Object.keys(idCharDistributions).sort();
+
+            var max = Object.values(idCharDistributions).reduce((p,c) => p > c? p: c)
+            //console.log(max)
+            keys.forEach(key => makeBar(key, Math.round( idCharDistributions[key] / max * 100)))
+
+            
+        }
+
+        function makeBar(char, value) {
+            var barContent = `<div class="chart-bar" id="bar-${char}" >
+                <div class="label">${char}: ${value}%</div>
+                <div class="bar" style="background-color:${getColor(char)}; height: 1rem; width: ${value}% " ></div>
+                </div>`;
+
+            var templateEl = document.createElement('template')
+            templateEl.innerHTML= barContent;
+            document.getElementById('chart').appendChild(templateEl.content)
+
+        }
+
+    </script>
+</body>
+</html>
