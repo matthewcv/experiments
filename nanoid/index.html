@@ -23,13 +23,13 @@
 <body >
 
     <div>
-        <input id="how-many" type="number" value="100000" /> <button id='make-them'>make them</button> Total: <span id='total-gend'></span>
+        <input id="how-many" type="number" value="1000000" /> <button id='make-them'>make them</button> Total: <span id='total-gend'></span>
     </div>
     <div id="chart"></div>
 
     <script type="module">
 
-        const worker = new Worker("worker.js", {type:"module"})
+        const worker = new Worker("worker.js")
         
         worker.addEventListener('error', evt => {
             console.log("WORKER ERROR", evt)
