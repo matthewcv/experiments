@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Variables</title>
+
+    <style id='has-color-var'>
+
+        :root {
+            --border-width: 4px;
+            --border-style: solid; 
+            --border-color: #2c1eec;
+            --border: var(--border-style) var(--border-width) var(--border-color);
+        }
+        h1, h2 {
+            border: var(--border)
+        }
+        div {
+            --color: #008000;
+
+            background-color: var(--color);
+            border: var(--border-style) var(--border-width) var(--border-color);
+            margin: 10px;
+        }
+
+
+
+        p {
+            background-color: var(--color); /* doesn't work because the --color var isn't matched by the selector */
+        }
+    </style>
+</head>
+<body>
+    <h1>Matthew</h1>
+    <h2>Vogt</h2>
+    <div>red</div>
+    <div>black</div>
+    <p>Buzz</p>
+
+    background color <input type="color" name="" value="#008000" id="colorPicker">
+
+    border color <input type="color" name="" value="#008000" id="borderColorPicker">
+
+    border width <input type="range" name="" id="borderWidthPicker" min="0" max="20" step="1">
+    <script>
+
+        var colorCssVariableValue = getComputedStyle( document.querySelector('div') ).getPropertyValue('--color');
+
+        // doing this sets the variable value in-line for just that element. 
+        //document.querySelector('div').style.setProperty('--color', "#C78000")
+
+        // to make the variable apply to all elements, need to find the actual style sheet rule and set it there. 
+        var sheetWithColorVar = document.getElementById('has-color-var').sheet;
+        var ruleWithColorVar = [...sheetWithColorVar.rules].find(r => r.selectorText === 'div')
+        ruleWithColorVar.style.setProperty('--color', "#C78000")
+
+        document.getElementById('colorPicker').value = ruleWithColorVar.style.getPropertyValue('--color')
+        document.getElementById('borderColorPicker').value = getComputedStyle( document.documentElement).getPropertyValue('--border-color').trim()
+        document.getElementById('borderWidthPicker').value = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--border-width'))
+
+
+        document.getElementById('colorPicker').addEventListener('input', function(evt) {
+            ruleWithColorVar.style.setProperty('--color', evt.target.value)
+        })
+        document.getElementById('borderColorPicker').addEventListener('input', function(evt) {
+            document.documentElement.style.setProperty('--border-color', evt.target.value)
+        })
+        document.getElementById('borderWidthPicker').addEventListener('input', function(evt) {
+            document.documentElement.style.setProperty('--border-width', evt.target.value + "px")
+        })
+        
+    </script>
+</body>
+</html>
